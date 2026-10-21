@@ -13,7 +13,9 @@
         "prebuild": "node scripts/check-engines.mjs",
         "build": "next build",
         "start": "next start",
-        "lint": "eslint ."
+        "lint": "eslint .",
+        "test": "vitest run",
+        "test:watch": "vitest"
     },
     "dependencies": {
         "@react-three/fiber": "^8.18.0",
@@ -25,11 +27,18 @@
         "three": "^0.174.0"
     },
     "devDependencies": {
+        "@testing-library/jest-dom": "^7.0.1",
+        "@testing-library/react": "^16.3.3",
+        "@testing-library/user-event": "^14.6.8",
         "@types/node": "^24.19.2",
         "@types/react": "^18.3.31",
+        "@types/react-dom": "^18.3.7",
         "@types/three": "^0.174.0",
+        "@vitejs/plugin-react": "^6.1.2",
         "eslint": "^9.39.5",
         "eslint-config-next": "^16.4.2",
-        "typescript": "^5.9.3"
+        "jsdom": "^29.1.1",
+        "typescript": "^5.9.3",
+        "vitest": "^5.0.5"
     }
 }
