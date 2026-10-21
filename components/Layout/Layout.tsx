@@ -1,4 +1,4 @@
-import Head from 'next/dist/shared/lib/head';
+import Head from 'next/head';
 import Header from '../Header';
 import GlobalNavi from '../GlobalNavi';
 import Footer from '../Footer';

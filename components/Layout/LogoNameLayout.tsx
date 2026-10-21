@@ -1,5 +1,4 @@
 import React from "react";
-import { BindingOrAssignmentElementRestIndicator } from "typescript";
 
 // 氏名のデザインフォントレイアウト
 const myName = "Yudai Yamamoto";
