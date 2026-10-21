@@ -1,0 +1,23 @@
+version: 2
+updates:
+  # 依存ライブラリは週1回まとめて確認する。PR ごとに CI（型・lint・テスト・ビルド・E2E・画面比較）が走る。
+  # minor / patch は1つの PR にまとめ、major は個別の PR にする。
+  - package-ecosystem: npm
+    directory: /
+    schedule:
+      interval: weekly
+      day: monday
+      time: "09:00"
+      timezone: Asia/Tokyo
+    open-pull-requests-limit: 5
+    groups:
+      minor-and-patch:
+        update-types: [minor, patch]
+
+  - package-ecosystem: github-actions
+    directory: /
+    schedule:
+      interval: weekly
+      day: monday
+      time: "09:00"
+      timezone: Asia/Tokyo

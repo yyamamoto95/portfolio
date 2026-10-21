@@ -1,0 +1,34 @@
+name: 画面比較の基準画像を更新
+
+# 画面比較の基準画像は Linux 上の描画を正とするため、CI と同じ環境で生成する。
+# 意図した見た目の変更があったときに、手動で実行する。
+#   1. Actions タブでこのワークフローを、更新したいブランチを指定して実行する
+#   2. 生成された artifact（visual-baselines）をダウンロードし、e2e/visual.spec.ts-snapshots/ に置く
+#      例: gh run download <run-id> -n visual-baselines -D e2e/visual.spec.ts-snapshots
+#   3. 画像の差分を目視で確認してから commit する
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  update:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-node@v7
+        with:
+          node-version-file: package.json
+          cache: npm
+      - run: npm ci
+      - run: npx playwright install --with-deps chromium
+      - name: 基準画像を生成
+        run: npx playwright test e2e/visual.spec.ts --update-snapshots
+      - uses: actions/upload-artifact@v7
+        with:
+          name: visual-baselines
+          path: e2e/visual.spec.ts-snapshots/
+          if-no-files-found: error
+          retention-days: 7
