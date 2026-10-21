@@ -22,7 +22,7 @@ const links = [
 const email = 'y.yama991103@gmail.com';
 const Contact = () => {
   const [copyed, setCopyed] = React.useState(false);
-  const copyEmailToClipboard = (e) => {
+  const copyEmailToClipboard = () => {
     navigator.clipboard.writeText(email).then(
       () => {
         setTimeout(() => {

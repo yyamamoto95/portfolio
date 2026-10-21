@@ -3,7 +3,7 @@ import Link from "next/link";
 import Layout from "../components/Layout/Layout";
 import styles from "../styles/NotFound.module.scss";
 
-const Custom404: React.ReactNode = () => {
+const Custom404: React.FC = () => {
   return (
     <>
       <Head>

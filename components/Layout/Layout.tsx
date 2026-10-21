@@ -3,7 +3,6 @@ import Header from '../Header';
 import GlobalNavi from '../GlobalNavi';
 import Footer from '../Footer';
 import styles from '../styles/Layout.module.scss';
-import Background from '../three/Background';
 
 interface LayoutProps {
     children: React.ReactNode;
