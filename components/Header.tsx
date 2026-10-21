@@ -1,5 +1,5 @@
 import GlobalNavi from "./GlobalNavi";
-import Link from "next/dist/client/link";
+import Link from "next/link";
 import styles from "./styles/Header.module.scss";
 
 const Header: React.FC = () => {

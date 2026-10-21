@@ -1,4 +1,4 @@
-import Head from 'next/dist/shared/lib/head';
+import Head from 'next/head';
 import styles from '../styles/About.module.scss';
 import Layout from '../components/Layout/Layout';
 import ContentLayout from '../components/Layout/ContentLayout';

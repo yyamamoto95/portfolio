@@ -22,11 +22,9 @@
     }
   }
 
-  :global {
-    .isActive {
-      a {
-        color: $baseColor;
-      }
+  :global(.isActive) {
+    a {
+      color: $baseColor;
     }
   }
 }
@@ -51,12 +49,10 @@
       }
     }
 
-    :global {
-      .isActive {
-        a {
-          &:hover {
-            color: $baseColor;  
-          }
+    :global(.isActive) {
+      a {
+        &:hover {
+          color: $baseColor;
         }
       }
     }

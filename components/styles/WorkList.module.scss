@@ -127,10 +127,8 @@
         margin-top: 20px;
       }
 
-      :global {
-        .col1 {
-          justify-content: center;
-        }
+      :global(.col1) {
+        justify-content: center;
       }
     }
 
