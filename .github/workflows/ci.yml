@@ -1,0 +1,81 @@
+name: CI
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+# 同じブランチで新しい実行が始まったら、古い実行は取り消す。
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+jobs:
+  # 型・lint・ユニットテスト・ビルド。ライブラリ更新の PR で、まず壊れやすい箇所を機械的に確認する。
+  check:
+    name: 型・lint・ユニットテスト・ビルド
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-node@v7
+        with:
+          # Node のバージョンは package.json の engines.node を唯一の基準にする。
+          node-version-file: package.json
+          cache: npm
+      - run: npm ci
+      # package.json と package-lock.json の不一致、およびプラットフォーム別のネイティブバイナリ
+      # （Vitest が使う rolldown など）の記録欠落を検出する。
+      # npm 11.6.0 には、再解決のたびにこの記録をロックファイルから消すバグがある。
+      - name: ロックファイルが最新であること
+        run: |
+          npm install --package-lock-only --ignore-scripts
+          git diff --exit-code package-lock.json
+      - name: 型チェック
+        run: npx tsc --noEmit
+      - name: lint
+        run: npm run lint -- --max-warnings 0
+      - name: ユニットテスト
+        run: npm test
+      - name: ビルド
+        run: npm run build
+
+  # 実ブラウザでの動作確認と画面比較。本番ビルドに対して実行する。
+  e2e:
+    name: E2E・画面比較
+    runs-on: ubuntu-24.04
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-node@v7
+        with:
+          node-version-file: package.json
+          cache: npm
+      - run: npm ci
+      - name: ブラウザのインストール
+        run: npx playwright install --with-deps chromium
+      - name: E2E・画面比較
+        run: npx playwright test
+      # 失敗時は、差分画像を含む HTML レポートから原因を確認する。
+      - uses: actions/upload-artifact@v7
+        if: ${{ !cancelled() }}
+        with:
+          name: playwright-report
+          path: playwright-report/
+          retention-days: 14
+
+  # 本番に含まれる依存の脆弱性。開発時のみの依存は対象外。
+  audit:
+    name: 本番依存の脆弱性
+    runs-on: ubuntu-24.04
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-node@v7
+        with:
+          node-version-file: package.json
+      - run: npm audit --omit=dev --audit-level=high
