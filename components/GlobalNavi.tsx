@@ -1,6 +1,5 @@
 import { useRouter } from "next/router";
 import Link from "next/link";
-import { useEffect, useState } from "react";
 import styles from "./styles/GlobalNavi.module.scss";
 
 const navList = [
@@ -27,14 +26,12 @@ const navList = [
 ];
 
 const GlobalNavi: React.FC = () => {
-  const [activeNav, setActiveNav] = useState(0);
   const router = useRouter();
 
-  useEffect(() => {
-    const currentPath = router.pathname.split("/")[1];
-    const index = navList.findIndex(({ path }) => path === currentPath);
-    setActiveNav(index);
-  }, []);
+  // 有効なナビ項目は state にせず、現在のパスの第1セグメントから描画のたびに導出する。
+  // 該当なし（404 など）の場合は -1 となり、どの項目も有効にならない。
+  const currentPath = router.pathname.split("/")[1];
+  const activeNav = navList.findIndex(({ path }) => path === currentPath);
 
   return (
     <>
@@ -47,9 +44,6 @@ const GlobalNavi: React.FC = () => {
                 ? `${styles.navListItem} isActive`
                 : styles.navListItem
             }
-            onClick={() => {
-              setActiveNav(navi.id);
-            }}
           >
             <Link href={`/${navi.path}`}>{navi.enName}</Link>
           </li>
