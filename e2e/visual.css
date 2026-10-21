@@ -1,0 +1,4 @@
+/* 画面比較のときだけ適用する。WebGL の背景は常に動くため非表示にする（領域は残るのでレイアウトは変わらない）。 */
+canvas {
+    visibility: hidden !important;
+}
