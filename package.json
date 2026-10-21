@@ -2,8 +2,15 @@
     "name": "portfolio",
     "version": "0.1.0",
     "private": true,
+    "engines": {
+        "node": "24.x",
+        "npm": "11.x"
+    },
     "scripts": {
+        "preinstall": "node scripts/check-engines.mjs",
+        "predev": "node scripts/check-engines.mjs",
         "dev": "next dev",
+        "prebuild": "node scripts/check-engines.mjs",
         "build": "next build",
         "start": "next start",
         "lint": "eslint ."
