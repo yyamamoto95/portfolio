@@ -14,6 +14,34 @@ concurrency:
 permissions:
   contents: read
 
+# Node のバージョンについて（意図とトレードオフ）
+#
+# どの job も、package.json の engines.node（24.x）の範囲で「常に最新の 24.x」を使う（check-latest: true）。
+#
+# 理由
+#   - Vercel は Node の minor / patch を固定できない。選べるのは major だけで、minor / patch は
+#     Vercel が自動で更新する（完全一致の版を engines.node に書いても、警告が出て無視される）。
+#     つまり本番ビルドの Node は、こちらの操作とは無関係に、そのときの最新の 24.x になる。
+#   - CI が古い版だと、本番ビルドとは違う Node でテストすることになる。
+#     実際に、CI がランナーのイメージにキャッシュされた 24.21.0 を使い続けていたとき、Vercel は 24.22.1 だった。
+#     CI を最新にそろえると、Node の更新で壊れる場合も、マージ前の PR で気づける。
+#   - ランナーのキャッシュに任せても、版は GitHub が画像を更新するたびに変わる。時期を選べないうえ、
+#     セキュリティ修正の反映が数日から数週間遅れる。
+#
+# 受け入れているリスク
+#   - minor / patch の互換性は、Node の公式な保証ではない（LTS の方針は「その系列にとって適切で安定していること」）。
+#     コードを変えていないのに、Node の更新だけで CI やビルドが失敗することが、まれにありえる。
+#     失敗は PR で見える形で出る。
+#
+# Node の更新で壊れたとき
+#   - 「実行環境: node X / npm Y」のログ行（scripts/check-engines.mjs が出す）で、使われた版を確認する。
+#   - CI だけを一時的に固定するには、setup-node に node-version として `24.x.y` の完全一致を指定する
+#     （指定すると node-version-file は無視される）。
+#   - Vercel は固定できない。Vercel のビルドも壊れる場合の退避策は次のどちらか。
+#       1. Vercel の管理画面で、直前の正常なデプロイに戻す（Instant Rollback。この運用は未確認）。
+#       2. Node の major を 22 に下げる。engines.node（22.x）、engines.npm（10.x）、@types/node（^22）を
+#          一緒に変える必要がある（scripts/check-engines.mjs が不一致を止めるため、engines.node だけは変えられない）。
+
 jobs:
   # 型・lint・ユニットテスト・ビルド。ライブラリ更新の PR で、まず壊れやすい箇所を機械的に確認する。
   check:
@@ -26,7 +54,7 @@ jobs:
         with:
           # Node のバージョンは package.json の engines.node を唯一の基準にする。
           node-version-file: package.json
-          # ランナーのイメージに入っている古い 24.x ではなく、常に最新の 24.x（セキュリティ修正済み）を使う。
+          # 常に最新の 24.x を使う（意図は、ファイル先頭の「Node のバージョンについて」を参照）。
           check-latest: true
           cache: npm
       - run: npm ci
@@ -56,7 +84,7 @@ jobs:
       - uses: actions/setup-node@v7
         with:
           node-version-file: package.json
-          # ランナーのイメージに入っている古い 24.x ではなく、常に最新の 24.x（セキュリティ修正済み）を使う。
+          # 常に最新の 24.x を使う（意図は、ファイル先頭の「Node のバージョンについて」を参照）。
           check-latest: true
           cache: npm
       - run: npm ci
@@ -82,6 +110,6 @@ jobs:
       - uses: actions/setup-node@v7
         with:
           node-version-file: package.json
-          # ランナーのイメージに入っている古い 24.x ではなく、常に最新の 24.x（セキュリティ修正済み）を使う。
+          # 常に最新の 24.x を使う（意図は、ファイル先頭の「Node のバージョンについて」を参照）。
           check-latest: true
       - run: npm audit --omit=dev --audit-level=high

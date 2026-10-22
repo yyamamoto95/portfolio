@@ -21,7 +21,7 @@ jobs:
       - uses: actions/setup-node@v7
         with:
           node-version-file: package.json
-          # ランナーのイメージに入っている古い 24.x ではなく、常に最新の 24.x（セキュリティ修正済み）を使う。
+          # 常に最新の 24.x を使う（意図は ci.yml の「Node のバージョンについて」を参照）。
           check-latest: true
           cache: npm
       - run: npm ci
