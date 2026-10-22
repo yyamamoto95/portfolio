@@ -21,6 +21,8 @@ jobs:
       - uses: actions/setup-node@v7
         with:
           node-version-file: package.json
+          # 常に最新の 24.x を使う（意図は ci.yml の「Node のバージョンについて」を参照）。
+          check-latest: true
           cache: npm
       - run: npm ci
       - run: npx playwright install --with-deps chromium
