@@ -21,6 +21,8 @@ jobs:
       - uses: actions/setup-node@v7
         with:
           node-version-file: package.json
+          # ランナーのイメージに入っている古い 24.x ではなく、常に最新の 24.x（セキュリティ修正済み）を使う。
+          check-latest: true
           cache: npm
       - run: npm ci
       - run: npx playwright install --with-deps chromium

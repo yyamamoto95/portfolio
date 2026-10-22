@@ -78,3 +78,7 @@ if (mismatches.length > 0) {
     }
     process.exit(1);
 }
+
+// 実際に使われた版をログに残す。Node の脆弱性対応が CI や Vercel に反映されているかを、
+// ビルドログから後で確認できるようにするため（Vercel は使用した版を他に出力しない）。
+console.log(`実行環境: node ${process.versions.node} / npm ${npmVersion}`);

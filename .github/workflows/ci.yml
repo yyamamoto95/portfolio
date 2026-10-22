@@ -26,6 +26,8 @@ jobs:
         with:
           # Node のバージョンは package.json の engines.node を唯一の基準にする。
           node-version-file: package.json
+          # ランナーのイメージに入っている古い 24.x ではなく、常に最新の 24.x（セキュリティ修正済み）を使う。
+          check-latest: true
           cache: npm
       - run: npm ci
       # package.json と package-lock.json の不一致、およびプラットフォーム別のネイティブバイナリ
@@ -54,6 +56,8 @@ jobs:
       - uses: actions/setup-node@v7
         with:
           node-version-file: package.json
+          # ランナーのイメージに入っている古い 24.x ではなく、常に最新の 24.x（セキュリティ修正済み）を使う。
+          check-latest: true
           cache: npm
       - run: npm ci
       - name: ブラウザのインストール
@@ -78,4 +82,6 @@ jobs:
       - uses: actions/setup-node@v7
         with:
           node-version-file: package.json
+          # ランナーのイメージに入っている古い 24.x ではなく、常に最新の 24.x（セキュリティ修正済み）を使う。
+          check-latest: true
       - run: npm audit --omit=dev --audit-level=high
