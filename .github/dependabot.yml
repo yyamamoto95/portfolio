@@ -13,6 +13,12 @@ updates:
     groups:
       minor-and-patch:
         update-types: [minor, patch]
+    # @types/node の major は Node の major（package.json の engines.node）に合わせるため、自動更新の対象外にする。
+    # Node を上げるときは engines.node と @types/node を手で揃える。食い違うと、
+    # scripts/check-engines.mjs が install / CI で失敗するので、更新し忘れても気づける。
+    ignore:
+      - dependency-name: "@types/node"
+        update-types: ["version-update:semver-major"]
 
   - package-ecosystem: github-actions
     directory: /
