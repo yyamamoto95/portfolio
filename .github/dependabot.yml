@@ -11,6 +11,17 @@ updates:
       timezone: Asia/Tokyo
     open-pull-requests-limit: 5
     groups:
+      # React 本体・react-dom・それぞれの型定義・@react-three/fiber は、同時に上げないとインストールできない
+      # （fiber 9 は react >=19 <19.4 を要求し、型定義は React の major に合わせる必要がある）。
+      # 別々の PR にすると、major 更新のたびにどれも必ず失敗するため、1つの PR にまとめる。
+      # 複数のグループに当てはまる依存は最初のグループに入るので、minor-and-patch より前に書く。
+      react:
+        patterns:
+          - "react"
+          - "react-dom"
+          - "@types/react"
+          - "@types/react-dom"
+          - "@react-three/fiber"
       minor-and-patch:
         update-types: [minor, patch]
     # @types/node の major は Node の major（package.json の engines.node）に合わせるため、自動更新の対象外にする。
