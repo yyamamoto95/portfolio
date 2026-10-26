@@ -2,7 +2,7 @@ import Head from 'next/head';
 import '../styles/globals.scss';
 import { AppProps } from 'next/app';
 
-const MyApp = ({ Component, pageProps }: AppProps): JSX.Element => {
+const MyApp = ({ Component, pageProps }: AppProps): React.JSX.Element => {
     return (
         <>
             <Head>
