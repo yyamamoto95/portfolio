@@ -17,6 +17,8 @@ GitHub Actions（`.github/workflows/ci.yml`）が、PR ごとに型・lint・ユ
 
 実行環境は `package.json` の `engines`（Node 24.x / npm 11.x）に固定していて、合わない環境では install / dev / build が止まります。
 
+依存パッケージの `engines` に合わない Node でも、`npm install` / `npm ci` がエラーで止まります（`.npmrc` の `engine-strict`）。`engines.node` は `24.x` ですが、依存によっては 24.x のうち新しい版を要求するため（例: jsdom 30 は 24.15 以上）、Node は最新の 24.x に更新してください。
+
 `@types/node` の major は Node の major に合わせるため、Dependabot の major 更新は対象外です。Node を上げるときは、`engines.node` と `@types/node` を手で揃えてください。食い違うと install / CI が失敗します（`scripts/check-engines.mjs`）。
 
 ### 画面比較の基準画像
